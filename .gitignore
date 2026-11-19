@@ -11,3 +11,4 @@ devdata/
 _examples/benchmark/bench_server/bench_server
 _examples/benchmark/bench_client/bench_client
 .claude
+.DS_Store
