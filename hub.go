@@ -170,6 +170,19 @@ func (h *Hub) NumSubscribers(ch string) int {
 	return h.subShards[index(ch, numHubShards)].NumSubscribers(ch)
 }
 
+// SubscriberClients returns a local snapshot of the clients subscribed to ch.
+func (h *Hub) SubscriberClients(ch string) []*Client {
+	shard := h.subShards[index(ch, numHubShards)]
+	shard.mu.RLock()
+	defer shard.mu.RUnlock()
+	subscribers := shard.subs[ch]
+	clients := make([]*Client, 0, len(subscribers))
+	for _, subscriber := range subscribers {
+		clients = append(clients, subscriber.client)
+	}
+	return clients
+}
+
 // Channels returns a slice of all active channels.
 func (h *Hub) Channels() []string {
 	channels := make([]string, 0, h.NumChannels())
